@@ -2,7 +2,7 @@
 **Praktikum Jaringan Komputer Modul 3 Tahun 2023**
 
 ## Author
-| Nama | NRP |Github |
+| Nama | NRP |
 |---------------------------|------------|
 |Ali Hasyimi Assegaf | 5025211131 |
 
