@@ -125,6 +125,87 @@ auto eth0
 iface eth0 inet dhcp
 ```
 
+### Setup Sebelum Memulai 
+Pada setiap node, kita tambahkan script ini pada `.bashrc`
+
+- DNS Server
+  ```sh
+  echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+  apt-get update
+  apt-get install bind9 -y  
+  ```
+- DHCP Server
+  ```sh
+  echo 'nameserver 192.228.1.2' > /etc/resolv.conf   # Pastikan DNS Server sudah berjalan 
+  apt-get update
+  apt install isc-dhcp-server -y
+  ```
+- DHCP Relay
+  ```sh
+  apt-get update
+  apt install isc-dhcp-relay -y
+  ```
+- Database Server
+  ```sh
+  echo 'nameserver 192.228.1.2' > /etc/resolv.conf
+  apt-get update
+  apt-get install mariadb-server -y
+  service mysql start
+
+  Lalu jangan lupa untuk mengganti [bind-address] pada file /etc/mysql/mariadb.conf.d/50-server.cnf menjadi 0.0.0.0 dan jangan lupa untuk melakukan restart mysql kembali
+  ```
+- Load Balancer
+  ```sh
+  echo 'nameserver 192.228.1.2' > /etc/resolv.conf
+  apt-get update
+  apt-get install apache2-utils -y
+  apt-get install nginx -y
+  apt-get install lynx -y
+
+  service nginx start
+  ```
+- Worker PHP
+  ```sh
+  echo 'nameserver 192.228.1.2' > /etc/resolv.conf
+  apt-get update
+  apt-get install nginx -y
+  apt-get install wget -y
+  apt-get install unzip -y
+  apt-get install lynx -y
+  apt-get install htop -y
+  apt-get install apache2-utils -y
+  apt-get install php7.3-fpm php7.3-common php7.3-mysql php7.3-gmp php7.3-curl php7.3-intl php7.3-mbstring php7.3-xmlrpc php7.3-gd php7.3-xml php7.3-cli php7.3-zip -y
+
+  service nginx start
+  service php7.3-fpm start
+  ```
+- Worker Laravel
+  ```sh
+  echo 'nameserver 192.228.1.2' > /etc/resolv.conf
+  apt-get update
+  apt-get install lynx -y
+  apt-get install mariadb-client -y
+  # Test connection from worker to database
+  # mariadb --host=192.228.2.1 --port=3306   --user=kelompoka09 --password=passworda09 dbkelompoka09 -e "SHOW DATABASES;"
+  apt-get install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
+  curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg
+  sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+  apt-get update
+  apt-get install php8.0-mbstring php8.0-xml php8.0-cli   php8.0-common php8.0-intl php8.0-opcache php8.0-readline php8.0-mysql php8.0-fpm php8.0-curl unzip wget -y
+  apt-get install nginx -y
+
+  service nginx start
+  service php8.0-fpm start
+  ```
+- Client
+  ```sh
+  apt update
+  apt install lynx -y
+  apt install htop -y
+  apt install apache2-utils -y
+  apt-get install jq -y
+  ```
+
 ## Soal 1 
 >Lakukan konfigurasi sesuai dengan peta yang sudah diberikan.
 
@@ -307,28 +388,28 @@ service isc-dhcp-relay start
 
 Jalankan script ini pada DHCP server
 ```
-echo 'subnet 192.173.1.0 netmask 255.255.255.0 {
+echo 'subnet 192.228.1.0 netmask 255.255.255.0 {
 }
 
-subnet 192.173.2.0 netmask 255.255.255.0 {
+subnet 192.228.2.0 netmask 255.255.255.0 {
 }
 
-subnet 192.173.3.0 netmask 255.255.255.0 {
-    range 192.173.3.16 192.173.3.32;
-    range 192.173.3.64 192.173.3.80;
-    option routers 192.173.3.0;
-    option broadcast-address 192.173.3.255;
-    option domain-name-servers 192.173.1.2;
+subnet 192.228.3.0 netmask 255.255.255.0 {
+    range 192.228.3.16 192.228.3.32;
+    range 192.228.3.64 192.228.3.80;
+    option routers 192.228.3.0;
+    option broadcast-address 192.228.3.255;
+    option domain-name-servers 192.228.1.2;
     default-lease-time 180;
     max-lease-time 5760;
 }
 
-subnet 192.173.4.0 netmask 255.255.255.0 {
-    range 192.173.4.12 192.173.4.20;
-    range 192.173.4.160 192.173.4.168;
-    option routers 192.173.4.0;
-    option broadcast-address 192.173.4.255;
-    option domain-name-servers 192.173.1.2;
+subnet 192.228.4.0 netmask 255.255.255.0 {
+    range 192.228.4.12 192.228.4.20;
+    range 192.228.4.160 192.228.4.168;
+    option routers 192.228.4.0;
+    option broadcast-address 192.228.4.255;
+    option domain-name-servers 192.228.1.2;
     default-lease-time 720;
     max-lease-time 5760;
 }
