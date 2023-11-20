@@ -277,6 +277,10 @@ echo 'options {
 service bind9 start
 ```
 
+hasil
+![image](image/hasil1a.png)
+![image](image/hasil1b.png)
+
 ## Soal 2
 >Semua CLIENT harus menggunakan konfigurasi dari DHCP Server. Client yang melalui Switch3 mendapatkan range IP dari [prefix IP].3.16 - [prefix IP].3.32 dan [prefix IP].3.64 - [prefix IP].3.80
 
