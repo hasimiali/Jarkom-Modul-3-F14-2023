@@ -278,6 +278,7 @@ service bind9 start
 ```
 
 hasil
+
 ![image](image/hasil1a.png)
 ![image](image/hasil1b.png)
 
